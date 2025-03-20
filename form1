@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Review Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            text-align: center;
+        }
+        .stars {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+        .star {
+            font-size: 30px;
+            color: gray;
+        }
+        .selected {
+            color: gold;
+        }
+        textarea {
+            width: 100%;
+            margin-top: 10px;
+            padding: 10px;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Leave a Review</h2>
+    <div class="stars">
+        <span class="star" data-value="1">★</span>
+        <span class="star" data-value="2">★</span>
+        <span class="star" data-value="3">★</span>
+        <span class="star" data-value="4">★</span>
+        <span class="star" data-value="5">★</span>
+    </div>
+
+    <form id="reviewForm">
+        <input type="hidden" id="rating" name="rating" value="">
+        <textarea id="feedback" name="feedback" placeholder="Leave your feedback (optional)"></textarea>
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        const stars = document.querySelectorAll(".star");
+        const ratingInput = document.getElementById("rating");
+        const form = document.getElementById("reviewForm");
+
+        stars.forEach(star => {
+            star.addEventListener("click", function() {
+                let rating = this.getAttribute("data-value");
+                ratingInput.value = rating;
+                stars.forEach(s => s.classList.remove("selected"));
+                for (let i = 0; i < rating; i++) {
+                    stars[i].classList.add("selected");
+                }
+            });
+        });
+
+        form.addEventListener("submit", function(event) {
+            event.preventDefault();
+            const rating = ratingInput.value;
+            const feedback = document.getElementById("feedback").value;
+            
+            if (rating == 5) {
+                window.location.href = "https://search.google.com/local/writereview?placeid=ChIJ74Ra4TtV2YARmA3iwQcO-bo&source=g.page.m.ia._&laa=nmx-review-solicitation-ia2https://search.google.com/local/writereview?placeid=ChIJ74Ra4TtV2YARmA3iwQcO-bo&source=g.page.m.ia._&laa=nmx-review-solicitation-ia2";
+            } else {
+                const emailBody = `New review received:\nRating: ${rating} stars\nFeedback: ${feedback}`;
+                window.location.href = `mailto:zack@seo-write.com?subject=New Customer Review&body=${encodeURIComponent(emailBody)}`;
+            }
+        });
+    </script>
+
+</body>
+</html>
