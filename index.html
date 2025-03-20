@@ -83,15 +83,15 @@
         const reviewForm = document.getElementById("reviewForm");
         const feedbackForm = document.getElementById("feedbackForm");
 
-        let selectedRating = 0;
-
         // Handle star selection
         stars.forEach(star => {
             star.addEventListener("click", function() {
-                selectedRating = this.getAttribute("data-value");
-                ratingInput.value = selectedRating;
+                let rating = this.getAttribute("data-value");
+                ratingInput.value = rating;
+                
+                // Update UI
                 stars.forEach(s => s.classList.remove("selected"));
-                for (let i = 0; i < selectedRating; i++) {
+                for (let i = 0; i < rating; i++) {
                     stars[i].classList.add("selected");
                 }
             });
@@ -100,13 +100,14 @@
         // Handle initial review form submission
         reviewForm.addEventListener("submit", function(event) {
             event.preventDefault();
+            const rating = ratingInput.value;
 
-            if (!selectedRating) {
+            if (!rating) {
                 alert("Please select a star rating before submitting.");
                 return;
             }
 
-            if (selectedRating == 5) {
+            if (rating == 5) {
                 window.location.href = "https://search.google.com/local/writereview?placeid=ChIJ74Ra4TtV2YARmA3iwQcO-bo&source=g.page.m.ia._&laa=nmx-review-solicitation-ia2";
             } else {
                 reviewSection.style.display = "none";
@@ -115,3 +116,27 @@
         });
 
         // Handle feedback form submission
+        feedbackForm.addEventListener("submit", function(event) {
+            event.preventDefault();
+            const rating = ratingInput.value;
+            const feedback = document.getElementById("feedback").value.trim();
+
+            if (!feedback) {
+                alert("Please enter your feedback before submitting.");
+                return;
+            }
+
+            const emailSubject = `Customer Feedback - ${rating} Stars`;
+            const emailBody = `New feedback received:\n\nRating: ${rating} stars\nFeedback: ${feedback}`;
+
+            // Send email
+            window.location.href = `mailto:zack@seo-write.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+
+            // Show Thank You message
+            feedbackSection.style.display = "none";
+            thankYouMessage.style.display = "block";
+        });
+    </script>
+
+</body>
+</html>
