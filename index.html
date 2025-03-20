@@ -25,56 +25,93 @@
         .selected {
             color: gold;
         }
+        textarea {
+            width: 100%;
+            margin-top: 10px;
+            padding: 10px;
+        }
         button {
             margin-top: 10px;
             padding: 10px;
             font-size: 16px;
             cursor: pointer;
         }
+        #feedbackSection, #thankYouMessage {
+            display: none;
+        }
     </style>
 </head>
 <body>
 
-    <h2>Leave a Review</h2>
-    <div class="stars">
-        <span class="star" data-value="1">★</span>
-        <span class="star" data-value="2">★</span>
-        <span class="star" data-value="3">★</span>
-        <span class="star" data-value="4">★</span>
-        <span class="star" data-value="5">★</span>
+    <!-- Review Selection Page -->
+    <div id="reviewSection">
+        <h2>Leave a Review</h2>
+        <div class="stars">
+            <span class="star" data-value="1">★</span>
+            <span class="star" data-value="2">★</span>
+            <span class="star" data-value="3">★</span>
+            <span class="star" data-value="4">★</span>
+            <span class="star" data-value="5">★</span>
+        </div>
+        <form id="reviewForm">
+            <input type="hidden" id="rating" name="rating" value="">
+            <button type="submit">Submit</button>
+        </form>
     </div>
 
-    <form id="reviewForm">
-        <input type="hidden" id="rating" name="rating" value="">
-        <button type="submit">Submit</button>
-    </form>
+    <!-- Feedback Section (Shown for 4 stars or lower) -->
+    <div id="feedbackSection">
+        <h2>Is there anything we could improve on?</h2>
+        <form id="feedbackForm">
+            <textarea id="feedback" name="feedback" placeholder="Your feedback here..."></textarea>
+            <button type="submit">Submit Feedback</button>
+        </form>
+    </div>
+
+    <!-- Thank You Message -->
+    <div id="thankYouMessage">
+        <h2>Thank you for your feedback!</h2>
+        <p>We look forward to working with you again soon.</p>
+    </div>
 
     <script>
         const stars = document.querySelectorAll(".star");
         const ratingInput = document.getElementById("rating");
-        const form = document.getElementById("reviewForm");
+        const reviewSection = document.getElementById("reviewSection");
+        const feedbackSection = document.getElementById("feedbackSection");
+        const thankYouMessage = document.getElementById("thankYouMessage");
+        const reviewForm = document.getElementById("reviewForm");
+        const feedbackForm = document.getElementById("feedbackForm");
 
+        let selectedRating = 0;
+
+        // Handle star selection
         stars.forEach(star => {
             star.addEventListener("click", function() {
-                let rating = this.getAttribute("data-value");
-                ratingInput.value = rating;
+                selectedRating = this.getAttribute("data-value");
+                ratingInput.value = selectedRating;
                 stars.forEach(s => s.classList.remove("selected"));
-                for (let i = 0; i < rating; i++) {
+                for (let i = 0; i < selectedRating; i++) {
                     stars[i].classList.add("selected");
                 }
             });
         });
 
-        form.addEventListener("submit", function(event) {
+        // Handle initial review form submission
+        reviewForm.addEventListener("submit", function(event) {
             event.preventDefault();
-            const rating = ratingInput.value;
 
-            if (!rating) {
+            if (!selectedRating) {
                 alert("Please select a star rating before submitting.");
                 return;
             }
 
-            if (rating == 5) {
+            if (selectedRating == 5) {
                 window.location.href = "https://search.google.com/local/writereview?placeid=ChIJ74Ra4TtV2YARmA3iwQcO-bo&source=g.page.m.ia._&laa=nmx-review-solicitation-ia2";
             } else {
-                window.l
+                reviewSection.style.display = "none";
+                feedbackSection.style.display = "block";
+            }
+        });
+
+        // Handle feedback form submission
