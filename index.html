@@ -21,6 +21,7 @@
         .star {
             font-size: 30px;
             color: gray;
+            transition: color 0.2s;
         }
         .selected {
             color: gold;
@@ -83,15 +84,17 @@
         const reviewForm = document.getElementById("reviewForm");
         const feedbackForm = document.getElementById("feedbackForm");
 
+        let selectedRating = 0; // Store selected rating
+
         // Handle star selection
         stars.forEach(star => {
             star.addEventListener("click", function() {
-                let rating = this.getAttribute("data-value");
-                ratingInput.value = rating;
-                
-                // Update UI
+                selectedRating = parseInt(this.getAttribute("data-value")); // Convert to integer
+                ratingInput.value = selectedRating; // Store in hidden input
+
+                // Update UI to highlight selected stars
                 stars.forEach(s => s.classList.remove("selected"));
-                for (let i = 0; i < rating; i++) {
+                for (let i = 0; i < selectedRating; i++) {
                     stars[i].classList.add("selected");
                 }
             });
@@ -100,14 +103,13 @@
         // Handle initial review form submission
         reviewForm.addEventListener("submit", function(event) {
             event.preventDefault();
-            const rating = ratingInput.value;
 
-            if (!rating) {
+            if (!selectedRating) {
                 alert("Please select a star rating before submitting.");
                 return;
             }
 
-            if (rating == 5) {
+            if (selectedRating === 5) {
                 window.location.href = "https://search.google.com/local/writereview?placeid=ChIJ74Ra4TtV2YARmA3iwQcO-bo&source=g.page.m.ia._&laa=nmx-review-solicitation-ia2";
             } else {
                 reviewSection.style.display = "none";
@@ -118,7 +120,6 @@
         // Handle feedback form submission
         feedbackForm.addEventListener("submit", function(event) {
             event.preventDefault();
-            const rating = ratingInput.value;
             const feedback = document.getElementById("feedback").value.trim();
 
             if (!feedback) {
@@ -126,8 +127,8 @@
                 return;
             }
 
-            const emailSubject = `Customer Feedback - ${rating} Stars`;
-            const emailBody = `New feedback received:\n\nRating: ${rating} stars\nFeedback: ${feedback}`;
+            const emailSubject = `Customer Feedback - ${selectedRating} Stars`;
+            const emailBody = `New feedback received:\n\nRating: ${selectedRating} stars\nFeedback: ${feedback}`;
 
             // Send email
             window.location.href = `mailto:zack@seo-write.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
